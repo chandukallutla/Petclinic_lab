@@ -1,0 +1,137 @@
+					CI -CD 
+				       Petclinic 
+
+Step: 1 : Language
+
+			Code - Java Language
+			Deploy - war File 
+
+Step:2   -	Create Security Group
+
+			Load Balancer - alb = 80 - 0.0.0.0/0
+
+			Bastion - 22 - VpnIP
+
+			jenkins - 
+				SSH = 22 bastionIP
+				8080 - alb
+
+			Tomcat -
+				SSH = 22 bastionIP
+				8080 - alb
+
+			RDS = 22 Bastion-sg
+				3306 - tomcat-sg 
+				3306 - jenkins-sg
+				3306 - alb-sg
+
+
+
+
+Step: 3	Create RDS 
+
+				Save user name
+				passwd
+				rds endpoint
+
+
+Step:4	
+		Create EC2
+
+		bastion - ssh, 22 VPN IP
+		tomcat - install tomact 
+		jenkins - install jenkins 
+			- Install git & 
+			- Install maven in Jenkins at /opt
+
+Step:5
+
+		1. Connect to Bastion and copy the pemfile
+		2.  connect to RDS from bastion and 
+			create database 
+			create user
+			grant privelleges
+			flush 
+
+Commands:
+
+
+Connecto the database host:
+                   mysql -h <endpoint> -u Username -p
+
+After connecting list the databases;
+
+                 Show databases;
+
+Create the database
+
+                 Create database test;
+
+Switch to the database
+
+                  Use test;
+Create the database dev_petlinic
+                  Create the database dev_petlinic;
+
+Create the user
+Grant
+Flush
+
+Create the user in mysql
+
+CREATE USER 'dev_petclinicuser'@'%' IDENTIFIED BY 'b98eLkdGWz2dFGmmnbbzxq';
+
+
+GRANT ALL PRIVILEGES ON dev_petclinic.* TO 'dev_petclinicuser'@'%';
+
+FLUSH PRIVILEGES;
+
+
+
+
+
+Step:6 
+	Jenkins :
+
+		Do SSH-KEYGEN in jenkins and Copy and Paste the idrsa.pub in GITHUB
+
+	Jenkins console: 
+
+			Take github URL and give it to the Jenkins 
+			give the branch Main / Master 
+
+Step:6 = CI – build 
+
+		Jenkins - Execute Shell 
+
+				/opt/maven/bin/mvn clean package
+				/opt/maven/bin/mvn clean package -P Mysql
+
+Step:7 = Artifactory
+
+			1. Go to S3 and Create S3 Bucket
+			create iam role(s3 Full Access)  and give it to Jenkins ec2 Instance
+
+			2. jenkins = Execute shell
+	
+				aws s3 cp Target/warfile s3://bucketname/
+
+Step:8 – CD = deploy
+
+		Execute Shell
+
+			aws s3 cp s3://bucketname/warfilename .
+			scp warfilename root@tomcatpvtIP:/opt/tomcat/webapps
+
+, Before selecting build now in jenkins Execute the shell,
+
+
+do the below activities: 
+		1. allow jenkins SG in tomcat sg =Tomcat -sg = ssh -22 - jenkins -sg
+		2. paste jenkins user public key in tomcat root user
+			jenkins user( ssh-keygen-pubkey) to tomcat(root-paste)
+		3. do telnet to check the connectivity between jenkins to tomcat
+			Telnet tomcat pri IP = 22
+		4. connect to tomcat from jenkins user
+			jenkins user -ssh Connect = ssh root@priIP
+	

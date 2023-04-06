@@ -1,0 +1,50 @@
+					Tomcat Installation
+
+
+
+Step : 1 Create Security Groups 
+	
+	SSH – 22 MYIP 
+		8080 – alb
+
+
+
+Step: 2 
+
+
+	#!/bin/bash
+	# install java
+	
+		yum update -y 
+	
+		yum install java -y 
+
+	# change the Directory
+	
+	cd /opt
+	
+	# download apache- tomcat
+
+	wget  https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.73/bin/apache-tomcat-9.0.73-windows-x64.zip
+
+	# unzip the file
+
+	Unzip apache-tomcat-9.0.73-windows-x64.zip
+
+	# delete the ZIP file 
+	
+	rm -f apache-tomcat-9.0.73-windows-x64.zip
+
+	# change the file name
+
+	mv apache-tomcat-9.0.73 tomcat
+
+	# give the permissions 
+
+	chmod -R 755 /opt/tomcat/
+
+	# start the tomcat
+
+	sh /opt/tomcat/bin/startup.sh 
+		
+	
